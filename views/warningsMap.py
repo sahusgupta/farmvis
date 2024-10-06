@@ -1,5 +1,3 @@
-# views/warningsMap.py
-
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
@@ -70,7 +68,7 @@ def display_event_map(lat=None, lon=None):
     col1, col2 = st.columns([10, 4])
 
     with col1:
-        st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state))
+        st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state), key="event_map")
 
     with col2:
         display_custom_legend(event_type_colors)

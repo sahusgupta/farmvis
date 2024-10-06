@@ -1,103 +1,179 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-from streamlit_echarts import st_echarts  # Make sure to install streamlit-echarts
+import plotly.graph_objects as go
+import requests
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
+import random
+# ---------------------------
+# Configuration and Constants
+# ---------------------------
 
-# Sample data for probabilities, temperature, and humidity
-np.random.seed(42)
-dates = pd.date_range(start="2023-01-01", periods=10, freq="M")
+API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'  # Replace with your OpenWeatherMap API key
 
-# Probability tables
-flood_probabilities = pd.DataFrame({
-    "Date": dates,
-    "Flood Probability (%)": np.random.randint(10, 90, size=len(dates))
-})
+# Initialize Geolocator
+geolocator = Nominatim(user_agent="streamlit_app")
 
-drought_probabilities = pd.DataFrame({
-    "Date": dates,
-    "Drought Probability (%)": np.random.randint(5, 70, size=len(dates))
-})
+# ---------------------------
+# Helper Functions
+# ---------------------------
 
-# Temperature and humidity data
-temperature_data = pd.DataFrame({
-    "Date": dates,
-    "Temperature (°C)": np.random.uniform(15, 35, size=len(dates))
-})
+@st.cache_data
+def get_coordinates(city_name):
+    try:
+        location = geolocator.geocode(city_name, timeout=10)
+        if location:
+            return (location.latitude, location.longitude)
+        else:
+            return (None, None)
+    except GeocoderTimedOut:
+        return (None, None)
 
-humidity_data = pd.DataFrame({
-    "Date": dates,
-    "Humidity (%)": np.random.uniform(30, 90, size=len(dates))
-})
+@st.cache_data
+def fetch_weather_data(lat, lon):
+    # OpenWeatherMap API endpoint
+    weather_url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}&units=metric"
+    aqi_url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API_KEY}"
+    
+    # Fetch weather data
+    weather_response = requests.get(weather_url)
+    weather_data = weather_response.json()
+    
+    # Fetch AQI data
+    aqi_response = requests.get(aqi_url)
+    aqi_data = aqi_response.json()
+    
+    return weather_data, aqi_data
 
-# Streamlit App Layout
-st.set_page_config(layout="wide", page_title="Environmental Factors Dashboard")
-st.title("Environmental Factors Dashboard")
+def display_donut_chart(title, probability):
+    fig = go.Figure(
+        data=[go.Pie(
+            labels=["Probability", ""],
+            values=[probability, 100 - probability],
+            hole=0.6,
+            hoverinfo='label+percent',
+            marker=dict(colors=["#FF6347", "rgba(0,0,0,0)"], line=dict(color='white', width=1))
+        )]
+    )
+    
+    fig.update_traces(
+        textinfo='percent',
+        textposition='inside',
+        showlegend=False
+    )
+    
+    fig.update_layout(
+        title_text=title,
+        annotations=[dict(text=f"{probability}%", x=0.5, y=0.5, font_size=20, showarrow=False)]
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
 
-# Sidebar for filters
-st.sidebar.header("Filters")
-selected_date = st.sidebar.selectbox("Select Date:", dates)
+def display_metrics(data, aqi):
+    # Generate random probabilities
+    flood_probability = round(random.uniform(0, 100), 2)
+    drought_probability = round(random.uniform(0, 100), 2)
+    
+    # Create two columns: Left for Temperature and Humidity, Right for Flood and Drought Probabilities
+    left_col, right_col = st.columns(2)
+    
+    with left_col:
+        # Display Temperature, Humidity, Wind Speed, and AQI
+        st.subheader("📈 Current Environmental Conditions")
+        temp_col, humidity_col = st.columns(2)
+        
+        with temp_col:
+            st.metric(label="🌡️ Temperature (°C)", value=data['main']['temp'])
+        
+        with humidity_col:
+            st.metric(label="💧 Humidity (%)", value=data['main']['humidity'])
+        
+        wind_col, aqi_col = st.columns(2)
+        
+        with wind_col:
+            wind_speed = data['wind']['speed'] if 'speed' in data['wind'] else 'N/A'
+            st.metric(label="🌬️ Wind Speed (m/s)", value=wind_speed)
+        
+        with aqi_col:
+            aqi_value = aqi['list'][0]['main']['aqi'] if 'list' in aqi and aqi['list'] else 'N/A'
+            aqi_description = get_aqi_description(aqi_value) if isinstance(aqi_value, int) else 'N/A'
+            st.metric(label="🌫️ Air Quality Index (AQI)", value=f"{aqi_value} ({aqi_description})")
+    
+    with right_col:
+        # Display Flood and Drought Probability Donut Charts
+        st.subheader("📊 Environmental Probabilities")
+        display_donut_chart("🌊 Flood Probability", flood_probability)
+        display_donut_chart("🌵 Drought Probability", drought_probability)
 
-# Main layout with different sections
-col1, col2 = st.columns([2, 3])
-
-# Probability Tables
-with col1:
-    st.subheader("Flood Probability Table")
-    st.dataframe(flood_probabilities)
-
-    st.subheader("Drought Probability Table")
-    st.dataframe(drought_probabilities)
-
-# Gauge charts for temperature and humidity
-with col2:
-    st.subheader("Environmental Factors")
-
-    # Temperature gauge
-    temperature_selected = temperature_data[temperature_data["Date"] == selected_date]["Temperature (°C)"].values[0]
-    temp_gauge = {
-        "tooltip": {"formatter": "{a} <br/>{c} °C"},
-        "series": [
-            {
-                "name": "Temperature",
-                "type": "gauge",
-                "min": 0,
-                "max": 50,
-                "detail": {"formatter": "{value} °C"},
-                "data": [{"value": temperature_selected, "name": "Temperature"}],
-                "axisLine": {
-                    "lineStyle": {
-                        "width": 10,
-                        "color": [[0.5, "#4CAF50"], [0.75, "#FFEB3B"], [1, "#F44336"]]
-                    }
-                }
-            }
-        ]
+def get_aqi_description(aqi_value):
+    """Convert AQI value to descriptive category."""
+    descriptions = {
+        1: "Good",
+        2: "Fair",
+        3: "Moderate",
+        4: "Poor",
+        5: "Very Poor"
     }
-    st_echarts(temp_gauge, height="300px")
+    return descriptions.get(aqi_value, "Unknown")
 
-    # Humidity gauge
-    humidity_selected = humidity_data[humidity_data["Date"] == selected_date]["Humidity (%)"].values[0]
-    humidity_gauge = {
-        "tooltip": {"formatter": "{a} <br/>{c}%"},
-        "series": [
-            {
-                "name": "Humidity",
-                "type": "gauge",
-                "min": 0,
-                "max": 100,
-                "detail": {"formatter": "{value}%"},
-                "data": [{"value": humidity_selected, "name": "Humidity"}],
-                "axisLine": {
-                    "lineStyle": {
-                        "width": 10,
-                        "color": [[0.3, "#03A9F4"], [0.7, "#4CAF50"], [1, "#FF5722"]]
-                    }
-                }
-            }
-        ]
-    }
-    st_echarts(humidity_gauge, height="300px")
+# ---------------------------
+# Main Application
+# ---------------------------
 
-# Footer
-st.markdown("---")
-st.write("Developed for monitoring key environmental factors in a simple and intuitive way.")
+def main():
+    # Set the page configuration
+    st.set_page_config(
+        page_title="Environmental Metrics Dashboard",
+        page_icon="🌍",
+        layout="wide",
+    )
+    
+    # Title of the dashboard
+    st.title("🌍 Environmental Metrics Dashboard")
+    
+    # Sidebar for user inputs
+    st.sidebar.header("Location Input")
+    
+    # Location input method
+    location_method = st.sidebar.radio("Select Location Input Method", ("Manual Entry", "Automatic Detection"))
+    
+    if location_method == "Manual Entry":
+        city = st.sidebar.text_input("Enter Your City Name", value="New York")
+    else:
+        # Use ipinfo.io to get approximate location based on IP
+        try:
+            ip_response = requests.get("https://ipinfo.io/json")
+            ip_data = ip_response.json()
+            city = ip_data.get("city", "New York")
+            st.sidebar.write(f"Detected City: **{city}**")
+        except:
+            st.sidebar.write("Could not detect location automatically. Please enter manually.")
+            city = st.sidebar.text_input("Enter Your City Name", value="New York")
+    
+    # Fetch coordinates
+    lat, lon = get_coordinates(city)
+    
+    if lat is None or lon is None:
+        st.error("Could not geocode the provided city name. Please check and try again.")
+        return
+    
+    # Fetch weather and AQI data
+    weather_data, aqi_data = fetch_weather_data(lat, lon)
+    
+    # Check for successful data retrieval
+    if weather_data.get('cod') != 200:
+        st.error("Failed to fetch weather data. Please check the city name or try again later.")
+        return
+    
+    if not aqi_data.get('list'):
+        st.error("Failed to fetch AQI data. Please try again later.")
+        return
+    
+    # Display metrics
+    display_metrics(weather_data, aqi_data)
+
+# ---------------------------
+# Run the Application
+# ---------------------------
+if __name__ == "__main__":
+    main()

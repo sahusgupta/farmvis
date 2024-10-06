@@ -6,7 +6,6 @@ from views.dashboard import main
 from views.about import main as a_main
 from views.warningsMap import display_event_map, display_event_key
 from views.droughtMap import display_drought_map, display_drought_key
-from views.soilMoistureMap import embed_arcgis_map
 
 st.sidebar.title("Navigation")
 options = st.sidebar.radio("Go to", ("Dashboard", "Preferences", "About", "Maps"))
@@ -20,18 +19,13 @@ elif options == "Preferences":
 elif options == "Maps":
     st.subheader("Choose a Map to Display")
 
-    map_options = st.radio("Select Map", ("Event Map", "Drought Map", "Soil Moisture Map"))
+    map_options = st.radio("Select Map", ("Event Map", "Drought Map"))
 
     if map_options == "Event Map":
         display_event_map()
         display_event_key()
         
-        st.markdown("This map shows live weather warnings for hazardous events.")
+        st.markdown("This map shows warnings for different events.")
     elif map_options == "Drought Map":
         display_drought_map()
         display_drought_key()
-        st.markdown("This map shows live levels of drought conditions.")
-        
-    elif map_options == "Soil Moisture Map":
-        embed_arcgis_map()
-        st.markdown("This map shows soil moisture levels.")

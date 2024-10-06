@@ -35,7 +35,6 @@ def fetch_data_from_layer(layer_id, where_clause):
 
 def process_layers(layers, where_clause):
     coordinates = []
-    # Initialize event_properties with empty lists for each interested event
     event_properties = {event: [] for event in INTERESTED_EVENTS}
     layer_summary = {}
 

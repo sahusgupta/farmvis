@@ -85,6 +85,73 @@ def display_custom_legend(event_type_colors):
     ax.axis('off')
     st.pyplot(fig)
 
+
+def display_event_key():
+    st.sidebar.title("Event Types Key")
+    
+    with st.sidebar.expander("Flash Flood Warning", expanded=False):
+        st.write("""
+            **Flash Flood Warning:** Issued when flash flooding is imminent or occurring. 
+            People should take immediate action to protect life and property.
+        """)
+    
+    with st.sidebar.expander("Hydrologic Advisory", expanded=False):
+        st.write("""
+            **Hydrologic Advisory:** Advises that river or stream levels are elevated but not at a flood stage.
+            It's a heads-up for potential rising water conditions.
+        """)
+    
+    with st.sidebar.expander("Hydrologic Outlook", expanded=False):
+        st.write("""
+            **Hydrologic Outlook:** A general forecast for possible flooding in the coming days or weeks. 
+            No imminent flooding, but a long-term alert.
+        """)
+
+    with st.sidebar.expander("Low Water Advisory", expanded=False):
+        st.write("""
+            **Low Water Advisory:** Issued when water levels are extremely low, potentially affecting navigation or water supply.
+        """)
+
+    with st.sidebar.expander("Flash Flood Statement", expanded=False):
+        st.write("""
+            **Flash Flood Statement:** A follow-up message to a Flash Flood Warning, giving updates on the situation.
+        """)
+
+    with st.sidebar.expander("Flash Flood Watch", expanded=False):
+        st.write("""
+            **Flash Flood Watch:** Conditions are favorable for flash flooding but not yet certain. 
+            People should prepare for the possibility.
+        """)
+
+    with st.sidebar.expander("Flood Advisory", expanded=False):
+        st.write("""
+            **Flood Advisory:** Issued when flooding is expected but not severe enough to require a warning. 
+            It could still cause inconvenience.
+        """)
+
+    with st.sidebar.expander("Flood Statement", expanded=False):
+        st.write("""
+            **Flood Statement:** A follow-up message to a Flood Warning, providing updates on the flooding situation.
+        """)
+
+    with st.sidebar.expander("Flood Warning", expanded=False):
+        st.write("""
+            **Flood Warning:** Issued when widespread flooding is occurring or will occur soon. 
+            Immediate action is advised to protect life and property.
+        """)
+
+    with st.sidebar.expander("Flood Watch", expanded=False):
+        st.write("""
+            **Flood Watch:** Conditions are favorable for flooding but not yet certain. 
+            People should prepare and monitor updates.
+        """)
+
+    with st.sidebar.expander("Dust Storm Warning", expanded=False):
+        st.write("""
+            **Dust Storm Warning:** Issued when a dust storm is occurring or imminent, which could severely reduce visibility and pose danger to people.
+        """)
+
+
 def main():
     st.title("Environmental Metrics and Warning Events")
 

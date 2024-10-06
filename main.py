@@ -4,13 +4,12 @@ import streamlit as st
 from views.prefs import farm_information_form
 from views.dashboard import main
 from views.about import main as a_main
-from views.warningsMap import display_event_map
-from views.droughtMap import display_drought_map
-# Sidebar navigation
-st.sidebar.title("Navigation")
-options = st.sidebar.radio("Go to", ("Dashboard", "Preferences", "About", "Maps"))  # Add "Heatmap" option
+from views.warningsMap import display_event_map, display_event_key
+from views.droughtMap import display_drought_map, display_drought_key
 
-# Navigation logic
+st.sidebar.title("Navigation")
+options = st.sidebar.radio("Go to", ("Dashboard", "Preferences", "About", "Maps"))
+
 if options == "Dashboard":
     main()
 elif options == "About":
@@ -18,5 +17,15 @@ elif options == "About":
 elif options == "Preferences":
     farm_information_form()
 elif options == "Maps":
-    display_event_map()
-    display_drought_map()
+    st.subheader("Choose a Map to Display")
+
+    map_options = st.radio("Select Map", ("Event Map", "Drought Map"))
+
+    if map_options == "Event Map":
+        display_event_map()
+        display_event_key()
+        
+        st.markdown("This map shows warnings for different events.")
+    elif map_options == "Drought Map":
+        display_drought_map()
+        display_drought_key()

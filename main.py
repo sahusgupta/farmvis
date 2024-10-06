@@ -1,18 +1,21 @@
+# main_app.py
+
 import streamlit as st
-import openai as oa
-import os
 from views.prefs import farm_information_form
 from views.dashboard import main
 from views.about import main as a_main
-st.sidebar.title("Navigation")
-options = st.sidebar.radio("Go to", ("Dashboard", "Preferences", "About"))
+from views.warningsMap import display_event_map
 
+# Sidebar navigation
+st.sidebar.title("Navigation")
+options = st.sidebar.radio("Go to", ("Dashboard", "Preferences", "About", "Maps"))  # Add "Heatmap" option
+
+# Navigation logic
 if options == "Dashboard":
     main()
 elif options == "About":
     a_main()
 elif options == "Preferences":
     farm_information_form()
-    
-    
-    
+elif options == "Maps":
+    display_event_map()

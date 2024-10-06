@@ -35,7 +35,8 @@ def fetch_data_from_layer(layer_id, where_clause):
 
 def process_layers(layers, where_clause):
     coordinates = []
-    event_properties = {}
+    # Initialize event_properties with empty lists for each interested event
+    event_properties = {event: [] for event in INTERESTED_EVENTS}
     layer_summary = {}
 
     for layer in layers:
@@ -59,14 +60,13 @@ def process_layers(layers, where_clause):
                     coordinates.append([lat, lon])
 
                     event_type = feature['properties']['Event']
-                    if event_type not in event_properties:
-                        event_properties[event_type] = []
-                    event_properties[event_type].append({
-                        "layer_id": layer,
-                        "latitude": lat,
-                        "longitude": lon,
-                        "properties": feature['properties']
-                    })
+                    if event_type in INTERESTED_EVENTS:
+                        event_properties[event_type].append({
+                            "layer_id": layer,
+                            "latitude": lat,
+                            "longitude": lon,
+                            "properties": feature['properties']
+                        })
                     layer_summary[layer]["valid_coordinates"] += 1
 
                 elif geom_type in ['Polygon', 'MultiPolygon']:
@@ -74,14 +74,13 @@ def process_layers(layers, where_clause):
                     coordinates.append([centroid.y, centroid.x])
 
                     event_type = feature['properties']['Event']
-                    if event_type not in event_properties:
-                        event_properties[event_type] = []
-                    event_properties[event_type].append({
-                        "layer_id": layer,
-                        "latitude": centroid.y,
-                        "longitude": centroid.x,
-                        "properties": feature['properties']
-                    })
+                    if event_type in INTERESTED_EVENTS:
+                        event_properties[event_type].append({
+                            "layer_id": layer,
+                            "latitude": centroid.y,
+                            "longitude": centroid.x,
+                            "properties": feature['properties']
+                        })
                     layer_summary[layer]["valid_coordinates"] += 1
 
                 else:
@@ -120,8 +119,10 @@ def main():
         if label == -1:
             continue
         for event_type, properties in event_properties.items():
-            if properties[idx]['latitude'] == coordinates[idx][0] and properties[idx]['longitude'] == coordinates[idx][1]:
+            if idx < len(properties) and properties[idx]['latitude'] == coordinates[idx][0] and properties[idx]['longitude'] == coordinates[idx][1]:
                 properties[idx]['cluster_id'] = label
+                
+    print("Event types found:", list(event_properties.keys()))
 
     return event_properties, coordinates, labels
 

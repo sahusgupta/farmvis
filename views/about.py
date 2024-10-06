@@ -16,12 +16,13 @@ def header_section():
     """
     Creates the header section with a hero image, title, subtitle, and a call-to-action button.
     """
+
     st.markdown(
         f"""
         <div style='position: relative; text-align: center; color: white;'>
             <img src='https://picsum.photos/1200/400' alt='Hero Image' style='width:100%; height:auto; opacity:0.8;'>
             <div style='position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);'>
-                <h1 style='font-size:50px;'>Empowering Farmers for a Sustainable Future</h1>
+                <b><h1 style='font-size:50px; color: #00ba2b'>Empowering New Farmers</h1></b>
                 <p style='font-size:20px;'>Innovative Solutions for a Thriving Agricultural Community</p>
                 <a href='#' style='background-color:#4CAF50; color:white; padding:10px 20px; text-align:center; text-decoration:none; display:inline-block; border-radius:5px; font-size:16px;'>Learn More About Our Impact</a>
             </div>

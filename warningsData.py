@@ -1,9 +1,11 @@
+# warningsData.py
+
 import requests
 import json
 import numpy as np
 from sklearn.cluster import DBSCAN
 import urllib.parse
-from shapely.geometry import shape, Point
+from shapely.geometry import shape
 import matplotlib.pyplot as plt
 
 BASE_URL = "https://services9.arcgis.com/RHVPKKiFTONKtxq3/ArcGIS/rest/services/NWS_Watches_Warnings_v1/FeatureServer/"
@@ -106,15 +108,6 @@ def apply_dbscan(coordinates, eps=0.1, min_samples=3):
         print("No valid coordinates found for DBSCAN clustering.")
         return [], 0, 0
 
-def display_summary(layer_summary):
-    print("\nSummary of features, geometries, and clustering for each layer:")
-    for layer_id, summary in layer_summary.items():
-        print(f"Layer {layer_id}:")
-        print(f"  - Total features: {summary['total_features']}")
-        print(f"  - Valid coordinates extracted: {summary['valid_coordinates']}")
-        print(f"  - Invalid geometries: {summary['invalid_geometries']}")
-        print("\n")
-
 def main():
     encoded_event_names = encode_events(INTERESTED_EVENTS)
     where_clause = f"Event IN ({encoded_event_names})"
@@ -129,22 +122,8 @@ def main():
         for event_type, properties in event_properties.items():
             if properties[idx]['latitude'] == coordinates[idx][0] and properties[idx]['longitude'] == coordinates[idx][1]:
                 properties[idx]['cluster_id'] = label
-    
-    display_summary(layer_summary)
 
-    print("\nFinal organized event data by event type:")
-    print(json.dumps(event_properties, indent=4))
-
-    """
-    TESTING OF MAP PLOTTING (SCUFFED BUT WORKS)
-    
-        if len(coordinates) > 0:
-        plt.scatter(np.array(coordinates)[:, 1], np.array(coordinates)[:, 0], c=labels, cmap='rainbow', s=10)
-        plt.title('DBSCAN Clustering of Events')
-        plt.xlabel('Longitude')
-        plt.ylabel('Latitude')
-        plt.show()
-    """
+    return event_properties, coordinates, labels
 
 if __name__ == "__main__":
     main()

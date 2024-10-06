@@ -10,9 +10,9 @@ from views.dashboard import get_coordinates
 import requests
 
 def display_event_map(lat=None, lon=None):
-    st.title("NASA Warning Events - Streamlit Map with Compact Legend")
+    st.title("Smart Warning Map")
 
-    st.write("Fetching warning data...")
+    st.write("Live fetching warning data... 🔴")
 
     event_properties, coordinates, labels = get_warnings_data()
 

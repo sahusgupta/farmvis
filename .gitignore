@@ -1,1 +1,3 @@
 /firebase/config.py
+.venv
+.env

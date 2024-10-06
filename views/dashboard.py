@@ -5,11 +5,18 @@ import requests
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 import random
+from dotenv import load_dotenv
+import os
+
 # ---------------------------
 # Configuration and Constants
 # ---------------------------
 
-API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'  # Replace with your OpenWeatherMap API key
+# Load environment variables from the .env file
+load_dotenv()
+
+# Fetch the API key from the environment variable
+API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
 
 # Initialize Geolocator
 geolocator = Nominatim(user_agent="streamlit_app")

@@ -14,10 +14,6 @@ API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'  # Replace with your OpenWeatherMap API 
 # Initialize Geolocator
 geolocator = Nominatim(user_agent="streamlit_app")
 
-# ---------------------------
-# Helper Functions
-# ---------------------------
-
 @st.cache_data
 def get_coordinates(city_name):
     try:
@@ -121,12 +117,6 @@ def get_aqi_description(aqi_value):
 # ---------------------------
 
 def main():
-    # Set the page configuration
-    st.set_page_config(
-        page_title="Environmental Metrics Dashboard",
-        page_icon="🌍",
-        layout="wide",
-    )
     
     # Title of the dashboard
     st.title("🌍 Environmental Metrics Dashboard")

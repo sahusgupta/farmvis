@@ -40,9 +40,7 @@ def introduction_section():
     
     with col1:
         st.write("""
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at dolor sit amet mi laoreet vestibulum. 
-            Nulla facilisi. In non massa eget sapien faucibus vehicula. 
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus bibendum ligula non vehicula cursus.
+            Starting off in agriculture is an extremely daunting task for new farmers, who lack the experience that grisled veterans of the industry have. We aspire to provide realtime, easily accessible information and recommendations that are relevant to farmers' goals with their farms, helping to improve their experience using data from NASA.
         """)
     
     with col2:
@@ -56,24 +54,24 @@ def key_features_section():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.image("https://img.icons8.com/fluency/100/000000/eco-friendly.png", width=80)
-        st.markdown("### Sustainable Practices")
+        st.image("https://img.icons8.com/?size=100&id=0CoUpe9OEb6W&format=png&color=000000", width=80)
+        st.markdown("### Personalized Recomendations")
         st.write("""
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus bibendum ligula non vehicula cursus.
+           Our proprietary recommender system will offer valuable insights on how to act upon the information that we provide you.
         """)
     
     with col2:
         st.image("https://img.icons8.com/fluency/100/000000/tractor.png", width=80)
         st.markdown("### Modern Tools")
         st.write("""
-            Praesent nec arcu eget felis pretium vehicula. Curabitur vel lorem nec metus egestas fermentum.
+            We utilize advanced mapping and data visualization tools and algorithms to ensure that the alerts and information you recieve is as accurate as possible.
         """)
     
     with col3:
         st.image("https://img.icons8.com/fluency/100/000000/data-configuration.png", width=80)
-        st.markdown("### Data-driven Decisions")
+        st.markdown("### Expert Approved")
         st.write("""
-            Aliquam erat volutpat. Cras sed lectus vel erat tincidunt dapibus sit amet at odio.
+            The features we provide originate from input from seasoned farmers within the agricultural community, making sure to remain true to farmers.
         """)
 
 def story_section():

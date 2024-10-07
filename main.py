@@ -7,8 +7,10 @@ from views.about import main as a_main
 from views.warningsMap import display_event_map, display_event_key
 from views.droughtMap import display_drought_map, display_drought_key
 from views.soilMoistureMap import embed_arcgis_map
-st.sidebar.title("Navigation")
-options = st.sidebar.radio("Go to", ("Dashboard", "Preferences", "About", "Maps"))
+from PIL import Image
+st.sidebar.image(Image.open('assets/icon-min.png'))
+st.sidebar.title("Navigation & Personalization")
+options = st.sidebar.radio("Go to", ("Preferences", "Dashboard", "Maps", "About"))
 
 if options == "Dashboard":
     main()

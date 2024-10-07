@@ -74,74 +74,6 @@ def key_features_section():
             The features we provide originate from input from seasoned farmers within the agricultural community, making sure to remain true to farmers.
         """)
 
-def story_section():
-    """
-    Tells the story with alternating images and text.
-    """
-    st.markdown("## Our Journey")
-    
-    # First Story Block
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.image("https://picsum.photos/500/300", use_column_width=True)
-    
-    with col2:
-        st.write("""
-            Sed suscipit metus id purus auctor, ac suscipit libero malesuada. Integer hendrerit malesuada tortor, 
-            at cursus mi facilisis in. Maecenas eu risus a est fermentum tincidunt.
-        """)
-    
-    # Second Story Block
-    col3, col4 = st.columns(2)
-    
-    with col3:
-        st.write("""
-            Maecenas eu risus a est fermentum tincidunt. Duis sit amet libero hendrerit, cursus dui ac, fermentum velit.
-            Donec fringilla, metus nec consectetur cursus, orci urna aliquam turpis, at interdum purus nunc nec augue.
-        """)
-    
-    with col4:
-        st.image("https://picsum.photos/500/300", use_column_width=True)
-
-def testimonials_section():
-    """
-    Showcases farmer testimonials in a grid format.
-    """
-    st.markdown("## Farmers' Voices")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.image("https://picsum.photos/100/100", use_column_width=False)
-        st.markdown("### John Doe, Kansas")
-        st.write("""
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus bibendum ligula non vehicula cursus."
-        """)
-    
-    with col2:
-        st.image("https://picsum.photos/100/100", use_column_width=False)
-        st.markdown("### Jane Smith, Iowa")
-        st.write("""
-            "Praesent nec arcu eget felis pretium vehicula. Curabitur vel lorem nec metus egestas fermentum."
-        """)
-    
-    with col3:
-        st.image("https://picsum.photos/100/100", use_column_width=False)
-        st.markdown("### Mike Johnson, Texas")
-        st.write("""
-            "Aliquam erat volutpat. Cras sed lectus vel erat tincidunt dapibus sit amet at odio."
-        """)
-
-def call_to_action_section():
-    """
-    Encourages users to get involved with a call-to-action button.
-    """
-    st.markdown("## Join Our Growing Community")
-    st.markdown("""
-        <div style='text-align: center;'>
-            <a href='#' style='background-color:#FF9800; color:white; padding:15px 30px; text-align:center; text-decoration:none; display:inline-block; border-radius:5px; font-size:18px;'>Get Started</a>
-        </div>
-    """, unsafe_allow_html=True)
 
 def footer_section():
     """
@@ -191,21 +123,6 @@ def load_page():
     
     # Key Features Section
     key_features_section()
-    
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    
-    # Story Section
-    story_section()
-    
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    
-    # Testimonials Section
-    testimonials_section()
-    
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    
-    # Call to Action Section
-    call_to_action_section()
     
     st.markdown("<br><br>", unsafe_allow_html=True)
     

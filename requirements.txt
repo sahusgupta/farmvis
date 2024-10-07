@@ -6,7 +6,6 @@ streamlit
 openai
 streamlit_echarts
 geopy
-dotenv
 scikit-learn
 streamlit-folium
 

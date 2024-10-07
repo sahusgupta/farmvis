@@ -6,7 +6,7 @@ from views.dashboard import main
 from views.about import main as a_main
 from views.warningsMap import display_event_map, display_event_key
 from views.droughtMap import display_drought_map, display_drought_key
-
+from views.soilMoistureMap import embed_arcgis_map
 st.sidebar.title("Navigation")
 options = st.sidebar.radio("Go to", ("Dashboard", "Preferences", "About", "Maps"))
 
@@ -18,8 +18,7 @@ elif options == "Preferences":
     farm_information_form()
 elif options == "Maps":
     st.subheader("Choose a Map to Display")
-
-    map_options = st.radio("Select Map", ("Event Map", "Drought Map"))
+    map_options = st.radio("Select Map", ("Event Map", "Drought Map", "Soil Moisture Map"))
 
     if map_options == "Event Map":
         display_event_map()
@@ -29,3 +28,8 @@ elif options == "Maps":
     elif map_options == "Drought Map":
         display_drought_map()
         display_drought_key()
+        
+    elif map_options == "Soil Moisture Map":
+        st.markdown("This map shows soil moisture data.")
+        embed_arcgis_map()
+        

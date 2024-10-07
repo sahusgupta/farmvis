@@ -8,4 +8,4 @@ streamlit_echarts
 geopy
 scikit-learn
 streamlit-folium
-
+python-dotenv
